@@ -8,7 +8,7 @@
 * Check if is a valid space and hasn't been shot
   * If is empty: the tile is marked in blue
   * If is not empty:  the tile is marked in yellow
-  * If a full ship is hit: all the tiles occupied by the ship are marked in red, and a little particle effect is drawn
+  * If all ship tiles are hit: all the tiles occupied by the ship are marked in red
 * Update the number of shots available
 * Update the UI
 
@@ -25,6 +25,7 @@
 * Ship
 * Board
 * Particle
+* Background animation
 
 ## Found Issues
 

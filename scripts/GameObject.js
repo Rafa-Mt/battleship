@@ -12,15 +12,14 @@ export default class GameObject {
         GameObject.#sortObjArray();
     }
 
-    render() {
-        console.log(this.#layer)
-    }
-
+    render() { }
+    
     /**
      * @param {Number} value
      */
     set layer(value) {
-        this.#layer = value;
+        if (value < 0) throw new Error("No negative layers");
+        this.#layer = Math.ceil(value);
         GameObject.#sortObjArray();
     }
 

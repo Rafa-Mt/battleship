@@ -35,9 +35,9 @@ class Engine {
     }
 
     /**
-     * @param {HTMLElement} parentNode 
+     * @param {HTMLElement} parentElement 
      */
-    initCanvas(parentNode) {
+    initCanvas(parentElement) {
         const canvas = document.createElement('canvas');
         
         canvas.id = "Battleship";
@@ -51,7 +51,7 @@ class Engine {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        parentNode.appendChild(canvas);
+        parentElement.appendChild(canvas);
         window.canvas = canvas;
 
         window.onresize = (event) => {

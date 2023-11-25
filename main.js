@@ -1,24 +1,46 @@
-import GameObject from "./scripts/GameObject.js";
-import gameEngine from "./scripts/Engine.js"
-import layers from "./scripts/layers.js"
+import GameObject from "./engine/GameObject.js";
+import engine from "./engine/Engine.js"
 
-gameEngine.initCanvas(document.body);
+document.body.appendChild(engine.canvas);
 
 class Square extends GameObject {
-    constructor(x,y,w,h,color,layer=0) {
+    constructor(x,y,w,h,color='#000000',layer=0) {
         super(layer);
-        this.props = {x:x,y:y,w:w,h:h,color:color}
+        this.color = color;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
     render() {
-        const ctx = window.canvas.getContext('2d');
-
-        ctx.fillStyle = this.props.color;
-        ctx.fillRect(this.props.x, this.props.y, this.props.w, this.props.h);
+        const ctx = engine.canvas.getContext('2d');
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle='#252525';
+        ctx.fillRect(this.x, this.y, this.w, this.h);
+        ctx.strokeRect(this.x, this.y, this.w, this.h);
+        
+        if (this.layer != engine.layers.background && false) {
+            this.x += 1.5;
+            this.y += 1;
+        }
     }
 }
 
-const s1 = new Square(45, 45, 170,170, "rgba(255, 0, 0, 1)", layers.ships);
-const s2 = new Square(75, 75, 170,170, "rgba(0, 255, 0, 1)", layers.particles);
-const s3 = new Square(105,105,170,170, "rgba(0, 0, 255, 1)", layers.ui);
+const squares = [];
 
-gameEngine.run();
+const genArray = (dims, side) => {
+    squares.push(new Square(0,0,engine.canvas.width, engine.canvas.height, '#fdfdfd', engine.layers.background))
+    for (let y = 0; y<dims; y++) {
+        for (let x = 0; x<dims; x++) {
+            squares.push(new Square(30+(side*x), 30+(side*y), side, side, "#f0f0f0", engine.layers.board))
+        }
+    }
+
+    // window.canvas.addEventListener('mousemove', (event) => console.log(event.clientX, event.clientY))
+}
+
+genArray(10, 60);
+// genFuncion(-20, 20, (x) => Math.pow(x,2), 2)
+
+console.log(engine.gameObjArray)
+engine.run();

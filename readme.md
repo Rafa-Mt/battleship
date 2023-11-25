@@ -14,8 +14,11 @@
 
 ## TODO: General
 
+* Sprites
 * All GameObject Classes
 * Main Gameloop
+* Input Events
+* Sound
 * Particle System
 * UI
 
@@ -23,6 +26,7 @@
 
 * UI
 * Ship
+* Tile
 * Board
 * Particle
 * Background animation

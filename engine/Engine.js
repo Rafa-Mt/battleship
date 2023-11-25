@@ -4,6 +4,18 @@ let globalState = {};
 class Engine {
     #animationFrame;
     constructor() {
+        this.canvas = this.#initCanvas();
+        this.layers = Object.freeze({
+            important: 0, // Not reccomended to use
+            popups: 1,
+            ui: 2,
+            particles: 3,
+            ships: 4,
+            boardOverlay: 5,
+            board: 6,
+            background: 7,
+        });
+        this.gameObjArray = [];
         if (instance) {
             throw new Error("Code violates Singleton design")
         }
@@ -21,7 +33,7 @@ class Engine {
 
     run() {
         const loop = () => {
-            window.gameObjArray.forEach((obj) => {
+            this.gameObjArray.forEach((obj) => {
                 obj.render();
             })
             
@@ -34,10 +46,7 @@ class Engine {
         window.cancelAnimationFrame(this.#animationFrame);
     }
 
-    /**
-     * @param {HTMLElement} parentElement 
-     */
-    initCanvas(parentElement) {
+    #initCanvas() {
         const canvas = document.createElement('canvas');
         
         canvas.id = "Battleship";
@@ -51,15 +60,13 @@ class Engine {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        parentElement.appendChild(canvas);
-        window.canvas = canvas;
-
         window.onresize = (event) => {
-            window.canvas.width = window.innerWidth;
-            window.canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         };
+        return canvas;
     }
 }
 
-const gameEngine = Object.freeze(new Engine());
-export default gameEngine;
+const engine = Object.freeze(new Engine());
+export default engine;

@@ -4,16 +4,15 @@ export default class GameObject {
     #layer;
     
     /**
-     * @param {Number} layer 
+     * @param {Number, String} layer 
      */
     constructor(layer = 0) {
-        this.#layer = layer;
+        this.#layer = typeof layer == "string" ? engine.layers[layer] : layer
         engine.gameObjArray.push(this);
         GameObject.#sortObjArray();
     }
 
     render() { }
-    checkClick() { }
     
     /**
      * @param {Number} value

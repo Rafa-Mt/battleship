@@ -13,23 +13,24 @@ class Engine {
             ships: 4,
             boardOverlay: 5,
             board: 6,
-            background: 7,
+            boardBackground: 7,
+            background: 8,
         });
         this.gameObjArray = [];
         if (instance) {
-            throw new Error("Code violates Singleton design")
+            throw new Error("Code violates Singleton design");
         }
 
         instance = this;
     }
 
-    getProperty(name) {
-        return globalState[name];
-    }
+    // getProperty(name) {
+    //     return globalState[name];
+    // }
 
-    setProperty(name, value) {
-        globalState[name] = value;
-    }
+    // setProperty(name, value) {
+    //     globalState[name] = value;
+    // }
 
     run() {
         const loop = () => {

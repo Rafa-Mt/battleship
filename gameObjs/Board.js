@@ -10,15 +10,24 @@ export default class Board extends GameObject {
         this.debug = debug;
         this.tileset = this.#genTileset();
         this.ships = this.#genAllShips();
+        this.shots = boardConfig.shots;
         engine.canvas.onmousedown = (event) => {
             this.tileset.flat().forEach((tile) => {
                 if (tile == null) return;
                 if (tile.isClicked(event.clientX, event.clientY)) {
                     // console.log(tile)
+                    this.shots--;
+                    if (this.shots <= 0 && this.getRemainingShips() > 0) {
+                        console.log("game over")
+                    }
                     tile.clickable = false;
                     tile.attack();
+                    if (this.getRemainingShips() == 0) {
+                        console.log("you won")
+                    }
                 }
             })
+            console.log(this.shots)
         }
 
         if (this.debug) {
@@ -48,7 +57,7 @@ export default class Board extends GameObject {
         const ships = [];
         boardConfig['ship-templates'].forEach((template) => {
             const amount = Array.from(
-                {length: template.amount}, () => (this.#genShip(template.lenght))
+                {length: template.amount}, () => (this.#genShip(template.lenght-1))
             );
             
             amount.forEach((ship) => ships.push(ship));
@@ -66,13 +75,13 @@ export default class Board extends GameObject {
             if (!this.tileset[testY][testX].isEmpty()) continue;
 
             const axisSelector = Math.floor(Math.random()*2);
-            const start = [testX, testY][axisSelector]
+            const start = [testX, testY][axisSelector];
             const end = start + lenght; 
             const axis = axles[axisSelector];
 
             if (end > axis - 1) continue; 
             
-            const range = [...Array(end - start + 1).keys()].map(x => x + start);
+            const range = Array.from({length: end-start+1}, (_, i) => start+i);
             const staticAxis = [testX, testY][1-axisSelector]; 
             const invalids = [];
 
@@ -88,7 +97,7 @@ export default class Board extends GameObject {
             if (staticAxis == testY) coords = {x: range, y: Array(lenght+1).fill(staticAxis)};
             else coords = {y: range, x: Array(lenght+1).fill(staticAxis)};
 
-            return new Ship(coords, lenght+1, this);
+            return new Ship(coords, lenght, this);
         }
     }
 
@@ -97,5 +106,13 @@ export default class Board extends GameObject {
         const ctx = engine.canvas.getContext('2d');
         ctx.fillStyle = boardConfig['bg-color'];
         ctx.fillRect(0, 0, width, height);
+    }
+
+    getRemainingShips() {
+        let ships = 0;
+        this.ships.forEach((ship) => {
+            if (ship.checkState() != 0) ships++;
+        })  
+        return ships;
     }
 }

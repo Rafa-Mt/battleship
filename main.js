@@ -1,4 +1,3 @@
-import GameObject from "./engine/GameObject.js";
 import engine from "./engine/Engine.js"
 import Board from "./gameObjs/Board.js";
 

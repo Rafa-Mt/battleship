@@ -1,9 +1,10 @@
 export const boardConfig = {
+    "shots": 30,
     "bg-color": "#5FBDFF",
     "layer": "boardBackground",
     "size": {
-        "vertical": 10,
-        "horizontal": 10
+        "vertical":10,
+        "horizontal": 10,
     },
     "ship-templates": [
         {

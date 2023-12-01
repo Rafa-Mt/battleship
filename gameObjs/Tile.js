@@ -3,15 +3,16 @@ import GameObject from "../engine/GameObject.js";
 import { tileConfig as config } from "../config.js";
 
 export default class Tile extends GameObject {
-    constructor(y, x, yM, xM) {
+    constructor(y, x, yM, xM, board) {
         super(config.layer);
+        this.board = board;
         this.coords = {y:yM, x:xM};
         this.clickable = true;
         [this.y, this.x] = [y, x];
         const gap = config.style.gap;
         [this.h, this.w] = [config.style.height - gap, config.style.width - gap];
         this.content = [];
-        this.state = "intact"
+        this.state = "intact";
     }
 
     isEmpty() {
@@ -60,6 +61,12 @@ export default class Tile extends GameObject {
                 this.#drawCircle(ctx);
                 ctx.lineWidth = 1;
                 break;
+            
+            case "debug":
+                ctx.strokeStyle = config.style["debug-color"];
+                this.#drawCircle(ctx);
+                ctx.lineWidth = 1;
+                break;
         }   
     }
 
@@ -71,13 +78,24 @@ export default class Tile extends GameObject {
     }
 
     attack() {
-        const states = {
-            "intact": "failed",
-            "failed": "shot",
-            "shot": "sunk",
-            "sunk": "intact"
+        if (this.content.length == 0) {
+            this.state = "failed";
+            return;
         }
-        this.state = states[this.state];
-        console.log(this.state)
+        const ship = this.content[0].ship;
+        ship.shoot(this.coords.y,this.coords.x);
+
+        if (ship.checkState() != 0) {
+            this.state = "shot";
+        }
+        else {
+            ship.segments.forEach((segment) => {
+                this.board.tileset[segment.y][segment.x].state = "sunk"
+            })
+        }
+    }
+
+    addSegment(y,x,ship) {
+        this.content.push({coords: {y,x}, ship})
     }
 }

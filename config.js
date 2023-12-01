@@ -39,6 +39,7 @@ export const tileConfig = {
         "bg-color": "#0FA3B1",
         "failed-color": "#4d8b31",
         "shot-color": "#F7B32B",
-        "sunk-color": "#C51605"
+        "sunk-color": "#C51605",
+        "debug-color": "#EDEDED"
     },
 }

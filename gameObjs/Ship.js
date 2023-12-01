@@ -1,30 +1,25 @@
 export default class Ship {
-    constructor(coords, size) {
-        this.size = size;
-        const unmovableAxis = {};
-        const movableAxis = {};
-        for (axis in coords) {
-            if (typeof axis == "number") {
-                unmovableAxis.index = axis;
-                unmovableAxis.value = coords[axis];
-                continue;
-            }
-            movableAxis.index = axis;
-            movableAxis.value = [];
-            axis.forEach((value) => {
-                movableAxis.value.push(coords[axis][value])
-            }) 
+    constructor(coords, size, board) {
+        [this.segments, this.size, this.board] = [[], size, board];
+        for (let coord in coords.x) {
+            this.segments.push({x: coords.x[coord], y: coords.y[coord], shot: false});
         }
-        this.coords = [];
-        movableAxis.value.forEach((value) => {
-            const coord = Array(2);
-            coord[unmovableAxis.index] = unmovableAxis.value;
-            coord[movableAxis.index] = value;
+
+        this.segments.forEach((segment) => {
+            this.board.tileset[segment.y][segment.x].addSegment(segment.y, segment.x, this)
         });
     }
 
     checkState() {
-
+        const filtered = this.segments.filter((segment) => !segment.shot); 
+        return filtered.length;
     }
 
+    shoot(y, x) {
+        for (let segment in this.segments){
+            if (this.segments[segment].x == x && this.segments[segment].y == y) {
+                this.segments[segment].shot = true;
+            }
+        }
+    }
 }

@@ -5,24 +5,31 @@ import Ship from './Ship.js';
 import Tile from './Tile.js'
 
 export default class Board extends GameObject {
-    constructor() {
+    constructor(debug = false) {
         super(boardConfig.layer);
+        this.debug = debug;
         this.tileset = this.#genTileset();
         this.ships = this.#genAllShips();
         engine.canvas.onmousedown = (event) => {
- 
             this.tileset.flat().forEach((tile) => {
                 if (tile == null) return;
                 if (tile.isClicked(event.clientX, event.clientY)) {
-                    console.log(tile)
-                    const coords = tile.coords;
-                    // this.tileset[coords.y][coords.x].clickable = false;
-                    // this.tileset[coords.y][coords.x].state = tile.state == "failed" ? "failed" : "shot";
-                    // this.tileset[coords.y][coords.x].state = "failed";
+                    // console.log(tile)
+                    tile.clickable = false;
                     tile.attack();
                 }
             })
         }
+
+        if (this.debug) {
+            this.tileset.forEach((row) => {
+                row.forEach((element) => {
+                    if (!element.isEmpty()) element.state = "debug";
+                })
+            })
+        }
+
+        console.log(this.ships)
     }
 
     #genTileset() {
@@ -31,7 +38,7 @@ export default class Board extends GameObject {
         const [startX, startY] = [200,30];
 
         const tileset = Array.from({length: vertical}, (_, y) => (
-            Array.from({length: horizontal}, (_, x) => (new Tile(startY+y*height, startX+x*width, y,x)))
+            Array.from({length: horizontal}, (_, x) => (new Tile(startY+y*height, startX+x*width, y,x, this)))
         ));
 
         return tileset;
@@ -76,7 +83,12 @@ export default class Board extends GameObject {
                 }
             });
             if (invalids.length != 0) continue;
-            return new Ship({x: range, y: staticAxis}, )
+
+            let coords;
+            if (staticAxis == testY) coords = {x: range, y: Array(lenght+1).fill(staticAxis)};
+            else coords = {y: range, x: Array(lenght+1).fill(staticAxis)};
+
+            return new Ship(coords, lenght+1, this);
         }
     }
 

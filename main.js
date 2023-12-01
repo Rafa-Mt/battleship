@@ -6,7 +6,7 @@ document.body.appendChild(engine.canvas);
 
 // GameLoop
 
-const board = new Board();
+const board = new Board(true);
 // console.log(engine.gameObjArray)
 // console.log(board.tileset, board.ships)
 engine.run();
